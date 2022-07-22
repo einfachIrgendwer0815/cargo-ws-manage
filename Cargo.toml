@@ -1,0 +1,17 @@
+[package]
+name = "cargo-ws-manage"
+version = "0.1.0"
+edition = "2021"
+authors = ["einfachIrgendwer0815"]
+description = "Cargo workspace management"
+readme = "README.md"
+repository = "https://github.com/einfachIrgendwer0815/cargo-ws-manage"
+license = "MIT"
+keywords = ["workspace", "cargo"]
+categories = ["command-line-utilities", "development-tools::cargo-plugins"]
+
+publish = false # temporary, until publish of the first version
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
