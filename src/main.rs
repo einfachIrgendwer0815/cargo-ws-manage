@@ -1,17 +1,17 @@
-use cargo_ws_manage::Config;
-
-use argparse::{ArgumentParser, StoreTrue};
+use clap::Parser;
+use cargo_ws_manage::config::Config;
 
 fn main() {
-    let mut cfg = Config::default();
-    {
-        let mut parser = ArgumentParser::new();
+    // Get command line arguments and if first element is "ws-manage", remove it
+    let mut args: Vec<String> = std::env::args().skip(1).collect();
+    if args.get(0).and_then(|s| Some(s.as_str())) == Some("ws-manage") {
+        args.remove(0);
+    }
 
-        parser.set_description("Cargo workspace management");
+    // use the potentially modified argument list
+    let cfg = Config::parse_from(&args);
 
-        parser.refer(&mut cfg.verbose)
-            .add_option(&["-v", "--verbose"], StoreTrue, "Verbose output");
-
-        parser.parse_args_or_exit();
+    if cfg.verbose {
+        println!("Running in verbose mode");
     }
 }
