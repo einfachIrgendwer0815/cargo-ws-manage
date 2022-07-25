@@ -1,5 +1,5 @@
+use cargo_ws_manage::{config::Config, run};
 use clap::Parser;
-use cargo_ws_manage::config::Config;
 
 fn main() {
     // Get command line arguments and if first element is "ws-manage", remove it
@@ -14,4 +14,6 @@ fn main() {
     if cfg.verbose {
         println!("Running in verbose mode");
     }
+
+    run(cfg);
 }

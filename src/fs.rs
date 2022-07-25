@@ -53,7 +53,7 @@ pub fn read_toml_file<T: for<'a> Deserialize<'a>>(path: &Path) -> Result<T, IOEr
     }
 }
 
-fn read_file(path: &Path) -> Result<String, IOError> {
+pub fn read_file(path: &Path) -> Result<String, IOError> {
     let path_str = unpack_path(path)?;
 
     let mut file = match fs::File::open(path_str) {
@@ -89,7 +89,7 @@ pub fn write_toml_file(
     Ok(())
 }
 
-fn write_file(path: &Path, data: &String, allow_overwrite: bool) -> Result<(), IOError> {
+pub fn write_file(path: &Path, data: &String, allow_overwrite: bool) -> Result<(), IOError> {
     let path_str = unpack_path(path)?;
 
     match fs::metadata(path_str) {
