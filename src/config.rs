@@ -1,5 +1,9 @@
+//! This module contains all settings for the argument parsing done by clap.
+
 use clap::{AppSettings, Args, Parser, Subcommand};
 
+/// This is the main configuration struct.
+///
 #[derive(Parser)]
 #[clap(setting = AppSettings::NoBinaryName)]
 #[clap(version, about, long_about = None)]
@@ -11,12 +15,15 @@ pub struct Config {
     pub command: Commands,
 }
 
+/// This enum contains all possible sub-commands, which are
+/// all represented by their own struct.
 #[derive(Subcommand)]
 pub enum Commands {
     ///Create new workspace
     New(New),
 }
 
+/// Stores futher arguments for the sub-command 'new'
 #[derive(Args)]
 pub struct New {
     /// Name of the project

@@ -1,3 +1,5 @@
+//! This module handles all i/o tasks.
+
 use std::fs;
 use std::io::{self, Read, Write};
 use std::path::Path;
@@ -5,6 +7,7 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 use toml;
 
+/// This enum contains all possible erros raised by the cargo_ws_manage::fs module.
 #[derive(Debug)]
 pub enum IOError {
     InvalidPath,
@@ -13,6 +16,7 @@ pub enum IOError {
     FsError(io::Error),
 }
 
+/// Creates a directory.
 pub fn mkdir(path: &Path, recursive: bool) -> Result<(), IOError> {
     let path_str = unpack_path(path)?;
 
@@ -28,6 +32,7 @@ pub fn mkdir(path: &Path, recursive: bool) -> Result<(), IOError> {
     Ok(())
 }
 
+/// Deletes a directory.
 pub fn rmdir(path: &Path, recursive: bool) -> Result<(), IOError> {
     let path_str = unpack_path(path)?;
 
@@ -43,6 +48,7 @@ pub fn rmdir(path: &Path, recursive: bool) -> Result<(), IOError> {
     Ok(())
 }
 
+/// Reads a toml file and deserializes it into an object.
 pub fn read_toml_file<T: for<'a> Deserialize<'a>>(path: &Path) -> Result<T, IOError> {
     let data = read_file(path)?;
     match toml::from_str::<T>(&data) {
@@ -53,6 +59,7 @@ pub fn read_toml_file<T: for<'a> Deserialize<'a>>(path: &Path) -> Result<T, IOEr
     }
 }
 
+/// Reads a file to string.
 pub fn read_file(path: &Path) -> Result<String, IOError> {
     let path_str = unpack_path(path)?;
 
@@ -73,6 +80,7 @@ pub fn read_file(path: &Path) -> Result<String, IOError> {
     }
 }
 
+/// Serializes an object writes a toml file.
 pub fn write_toml_file(
     path: &Path,
     data: &impl Serialize,
@@ -89,6 +97,7 @@ pub fn write_toml_file(
     Ok(())
 }
 
+/// Writes a file from a string.
 pub fn write_file(path: &Path, data: &String, allow_overwrite: bool) -> Result<(), IOError> {
     let path_str = unpack_path(path)?;
 
@@ -131,6 +140,7 @@ pub fn write_file(path: &Path, data: &String, allow_overwrite: bool) -> Result<(
     }
 }
 
+/// Unpacks the string of a path or raises an error if the path is invalid.
 fn unpack_path(path: &Path) -> Result<&str, IOError> {
     match path.to_str() {
         Some(s) => Ok(s),

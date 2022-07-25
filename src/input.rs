@@ -1,11 +1,15 @@
+//! Handles user communication.
+
 use std::io::{self, Write};
 
+/// Defaults for an yes-or-no prompt.
 pub enum DefaultBool {
     YES,
     NO,
     None,
 }
 
+/// Asks the user a yes or no question.
 pub fn prompt_yes_no(prompt: &str, default: DefaultBool) -> Option<bool> {
     let y_n = match default  {
         DefaultBool::YES => "(Y/n)",
