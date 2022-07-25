@@ -19,7 +19,6 @@
 //! cargo ws-manage new demo other_name # creates workspace in ./other_name
 //! ```
 
-
 use config::{Commands, Config};
 
 /// Runs subcommands based on the given configuration
