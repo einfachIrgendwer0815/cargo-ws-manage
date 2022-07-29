@@ -53,6 +53,26 @@ pub fn prompt_yes_no(prompt: &str, default: DefaultBool) -> Option<bool> {
     }
 }
 
+pub fn get_string(prompt: &str, default: Option<String>) -> String {
+    output_prompt(&format!("{} [{}] ", prompt, if let Some(text) = &default { &text } else { "" }));
+
+    let stdin = io::stdin();
+
+    let mut buffer;
+    buffer = String::new();
+    stdin.read_line(&mut buffer).expect("Could not read input.");
+
+    let buffer = buffer.trim().to_string();
+
+    if buffer.len() == 0 {
+        if let Some(text) = default {
+            return text;
+        }
+    }
+
+    buffer
+}
+
 fn output_prompt(prompt: &str) {
     print!("{}", prompt);
 
