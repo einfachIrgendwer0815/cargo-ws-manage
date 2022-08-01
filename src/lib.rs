@@ -29,7 +29,8 @@ pub fn run(cfg: Config) {
 }
 
 pub mod config;
+mod crates;
 pub mod fs;
 pub mod input;
 mod new;
-mod toml_data;
+mod workspace;

@@ -1,11 +1,15 @@
 //! This module handles all i/o tasks.
 
 use std::fs;
-use std::io::{self, Read, Write};
+use std::io::{self, ErrorKind, Read, Write};
 use std::path::Path;
 
 use serde::{Deserialize, Serialize};
-use toml;
+use toml::{self, value::Table, Value};
+
+pub use cargo_toml::{CargoToml, PackageSection, WorkspaceSection};
+
+pub mod cargo_toml;
 
 /// This enum contains all possible erros raised by the cargo_ws_manage::fs module.
 #[derive(Debug)]
@@ -148,6 +152,113 @@ fn unpack_path(path: &Path) -> Result<&str, IOError> {
             return Err(IOError::InvalidPath);
         }
     }
+}
+
+pub fn write_cargo_toml_or_handle_error(dirname: &str, content: &CargoToml) {
+    let toml_object = gen_toml_object(content);
+    let filename = format!("{}/Cargo.toml", dirname);
+
+    match write_toml_file(&Path::new(&filename), &toml_object, false) {
+        Ok(_) => {}
+        Err(e) => {
+            match e {
+                IOError::TomlSerError(e) => {
+                    println!(
+                        "Writing {} failed while processing toml object with error: {}",
+                        filename, e
+                    );
+                    std::process::exit(1);
+                }
+                IOError::FsError(e) => {
+                    println!("Writing {} failed with error: {}", filename, e);
+                    std::process::exit(1);
+                }
+                _ => {
+                    panic!(
+                        "Unexpected error occured when writing the toml file: {}",
+                        filename
+                    );
+                }
+            };
+        }
+    };
+}
+
+fn gen_toml_object(content: &CargoToml) -> Table {
+    let mut data = Table::new();
+
+    if let Some(p) = &content.package {
+        let mut pkg = Table::new();
+        pkg.insert(
+            String::from("name"),
+            Value::String(String::from(p.pkg_name.clone())),
+        );
+        pkg.insert(
+            String::from("version"),
+            Value::String(String::from(p.pkg_version.clone())),
+        );
+        pkg.insert(
+            String::from("edition"),
+            Value::String(String::from(p.pkg_edition.clone())),
+        );
+
+        data.insert(String::from("package"), Value::Table(pkg));
+    }
+
+    if let Some(d) = &content.dependencies {
+        let deps: Table = {
+            let mut t = Table::new();
+            for i in d.iter() {
+                let mut inner_t = Table::new();
+                inner_t.insert(String::from("path"), Value::String(i.clone()));
+                t.insert(i.clone(), Value::Table(inner_t));
+            }
+            t
+        };
+        data.insert(String::from("dependencies"), Value::Table(deps));
+    }
+
+    if let Some(w) = &content.workspace {
+        let ws: Table = {
+            let mut t = Table::new();
+            let members_as_values = w.members.iter().map(|i| Value::String(i.clone())).collect();
+            t.insert(String::from("members"), Value::Array(members_as_values));
+            t
+        };
+        data.insert(String::from("workspace"), Value::Table(ws));
+    }
+
+    data
+}
+
+pub fn create_dir_or_handle_error(dirname: &String) {
+    match mkdir(Path::new(dirname), false) {
+        Ok(_) => {}
+        Err(e) => {
+            match e {
+                IOError::InvalidPath => {
+                    println!("Path {} is invalid", dirname);
+                    std::process::exit(1);
+                }
+                IOError::FsError(e) => {
+                    match e.kind() {
+                        ErrorKind::AlreadyExists => {
+                            println!("Directory {} already exists", dirname);
+                            std::process::exit(1);
+                        }
+                        _ => {
+                            println!(
+                                "Error occurred when creating directory {}: {:?}",
+                                dirname, e
+                            );
+                            std::process::exit(1);
+                        }
+                    };
+                }
+                _ => {}
+            };
+        }
+    };
 }
 
 #[cfg(test)]
