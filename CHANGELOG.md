@@ -1,4 +1,4 @@
-## HEAD
+# 0.2.0
 
 - enhancement of the 'NEW' command:
 
