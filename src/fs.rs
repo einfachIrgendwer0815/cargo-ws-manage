@@ -154,6 +154,11 @@ fn unpack_path(path: &Path) -> Result<&str, IOError> {
     }
 }
 
+
+/// Takes a [CargoToml] instance, then generates an object structure that
+/// is serializable by the [toml] library. The toml string is then written to a file.
+/// If an error occures anywhere during that process, they'll get handled by
+/// displaying an error message and exiting with code 1.
 pub fn write_cargo_toml_or_handle_error(dirname: &str, content: &CargoToml) {
     let toml_object = gen_toml_object(content);
     let filename = format!("{}/Cargo.toml", dirname);
@@ -184,6 +189,8 @@ pub fn write_cargo_toml_or_handle_error(dirname: &str, content: &CargoToml) {
     };
 }
 
+/// Generates a object that can be serialized by the [toml] library
+/// out of an [CargoToml] instance.
 fn gen_toml_object(content: &CargoToml) -> Table {
     let mut data = Table::new();
 
@@ -231,6 +238,8 @@ fn gen_toml_object(content: &CargoToml) -> Table {
     data
 }
 
+/// Creates a directory by using [mkdir], but errors will be handled by
+/// displaying an error message and exiting the process with code 1.
 pub fn create_dir_or_handle_error(dirname: &String) {
     match mkdir(Path::new(dirname), false) {
         Ok(_) => {}

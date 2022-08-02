@@ -1,3 +1,5 @@
+//! This module invokes the execution of the 'NEW' command.
+
 use crate::config::New;
 use crate::workspace::Workspace;
 

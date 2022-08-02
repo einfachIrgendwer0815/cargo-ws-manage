@@ -2,6 +2,8 @@ use crate::fs::{self, CargoToml, PackageSection};
 use crate::input;
 use std::path::Path;
 
+/// This struct makes a directory for a crate and a Cargo.toml,
+/// based on user input.
 pub struct Crate {
     pub is_root: bool,
     pub crate_name: String,

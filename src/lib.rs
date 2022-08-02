@@ -1,15 +1,7 @@
 //! Manage cargo workspaces.
 //!
-//! There is not much to see currently, but these are some of the features that are to be added in the future:
+//! # Creating a new workspace
 //!
-//!- create workspaces:
-//!  - with and without root crates
-//!- add crates
-//!- remove crates
-//!- pass cargo commands to all crates (like cargo fmt, cargo add, cargo publish, ...)
-//!
-//! # Examples:
-//! Create a new workspace:
 //! ```bash
 //! cargo ws-manage new <PROJECT_NAME> [DIR_NAME]
 //! ```
@@ -18,6 +10,14 @@
 //! cargo ws-manage new demo # creates new workspace in ./demo
 //! cargo ws-manage new demo other_name # creates workspace in ./other_name
 //! ```
+//!
+//! ## More in the future
+//! There is not much else to see currently, but these are some of the features that are to be added in the future:
+//!
+//!- add crates
+//!- remove crates
+//!- pass cargo commands to all crates (like cargo fmt, cargo add, cargo publish, ...)
+//!
 
 use config::{Commands, Config};
 

@@ -53,6 +53,7 @@ pub fn prompt_yes_no(prompt: &str, default: DefaultBool) -> Option<bool> {
     }
 }
 
+/// Asks the user for a string input. It also offers using default values.
 pub fn get_string(prompt: &str, default: Option<String>, allow_empty: Option<bool>) -> String {
     let allow_empty = if let Some(allow) = allow_empty {
         allow

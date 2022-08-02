@@ -2,6 +2,8 @@ use crate::crates::Crate;
 use crate::fs::{self, CargoToml, PackageSection, WorkspaceSection};
 use crate::input;
 
+/// This struct creates a new Workspace with crates and
+/// a workspace-level Cargo.toml, based on user input.
 pub struct Workspace<'a> {
     pub project_name: &'a String,
     pub directory_name: &'a String,
