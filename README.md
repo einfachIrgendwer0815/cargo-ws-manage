@@ -27,22 +27,6 @@ Cargo-ws-manage is a command line tool written in rust and is made for an easier
 
 
 
-## Planned features
-
-There is not much to see currently, but these are some of the features that are to be added in the future:
-
-- create workspaces:
-  
-  - with and without root crates
-
-- add crates
-
-- remove crates
-
-- pass cargo commands to all crates (like cargo fmt, cargo add, cargo publish, ...)
-
-
-
 ## Getting started
 
 For installation, run:
@@ -62,3 +46,31 @@ To remove it, run:
 ```bash
 cargo uninstall cargo-ws-manage
 ```
+
+
+
+## How to use it
+
+### Create a new workspace:
+
+To create a completely new workspace run the following command and supply the name of the project and optionally the name of the workspace directory:
+
+```bash
+cargo ws-manage new foo bar
+```
+
+Follow the instructions on the screen and then you will get a new workspace called `foo` in the directory `bar`.
+
+
+
+## Planned features
+
+There is not much to see currently, but these are some of the features that are to be added in the future:
+
+- add crates
+
+- remove crates
+
+- pass cargo commands to all crates (like cargo fmt, cargo add, cargo publish, ...)
+
+- ...
