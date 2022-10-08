@@ -4,21 +4,21 @@ use crate::input;
 
 /// This struct creates a new Workspace with crates and
 /// a workspace-level Cargo.toml, based on user input.
-pub struct Workspace<'a> {
-    pub project_name: &'a String,
-    pub directory_name: &'a String,
+pub struct Workspace {
+    pub project_name: String,
+    pub directory_name: String,
     pub root_crate: Option<Crate>,
     pub crates: Vec<Crate>,
 }
 
-impl Workspace<'_> {
-    pub fn new<'a>(project_name: &'a String, directory_name: &'a Option<String>) -> Workspace<'a> {
+impl Workspace {
+    pub fn new(project_name: &String, directory_name: &Option<String>) -> Workspace {
         Workspace {
-            project_name,
+            project_name: project_name.clone(),
             directory_name: if let Some(name) = directory_name {
-                &name
+                name.clone()
             } else {
-                project_name
+                project_name.clone()
             },
             root_crate: None,
             crates: Vec::new(),
