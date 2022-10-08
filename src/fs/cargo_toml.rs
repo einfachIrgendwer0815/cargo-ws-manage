@@ -22,7 +22,7 @@ pub struct WorkspaceSection<'a> {
 
 /// Represents the \[package\] section of a Cargo.toml
 pub struct PackageSection<'a> {
-    pub pkg_name: &'a String,
+    pub pkg_name: &'a str,
     pub pkg_version: &'a str,
     pub pkg_edition: &'a str,
 }

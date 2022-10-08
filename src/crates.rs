@@ -73,7 +73,7 @@ impl Crate {
         }
     }
 
-    pub fn write_to_disk(&self, root_dir: &String) {
+    pub fn write_to_disk(&self, root_dir: &str) {
         let dirname = format!("{}/{}", root_dir, self.directory_name);
 
         if self.is_root == false {

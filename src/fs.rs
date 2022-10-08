@@ -239,7 +239,7 @@ fn gen_toml_object(content: &CargoToml) -> Table {
 
 /// Creates a directory by using [mkdir], but errors will be handled by
 /// displaying an error message and exiting the process with code 1.
-pub fn create_dir_or_handle_error(dirname: &String) {
+pub fn create_dir_or_handle_error(dirname: &str) {
     match mkdir(Path::new(dirname), false) {
         Ok(_) => {}
         Err(e) => {
