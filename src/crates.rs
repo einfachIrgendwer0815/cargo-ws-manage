@@ -4,6 +4,7 @@ use std::path::Path;
 
 /// This struct makes a directory for a crate and a Cargo.toml,
 /// based on user input.
+#[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Crate {
     pub is_root: bool,
     pub crate_name: String,

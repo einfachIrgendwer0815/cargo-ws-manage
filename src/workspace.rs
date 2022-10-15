@@ -4,6 +4,7 @@ use crate::input;
 
 /// This struct creates a new Workspace with crates and
 /// a workspace-level Cargo.toml, based on user input.
+#[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Workspace {
     pub project_name: String,
     pub directory_name: String,

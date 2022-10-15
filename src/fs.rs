@@ -12,7 +12,7 @@ pub use cargo_toml::{CargoToml, PackageSection, WorkspaceSection};
 pub mod cargo_toml;
 
 /// This enum contains all possible erros raised by the cargo_ws_manage::fs module.
-#[derive(Debug)]
+#[cfg_attr(debug_assertions, derive(Debug))]
 pub enum IOError {
     InvalidPath,
     TomlSerError(toml::ser::Error),
