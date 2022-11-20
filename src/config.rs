@@ -2,6 +2,10 @@
 
 use clap::{AppSettings, Args, Parser, Subcommand};
 
+pub mod new;
+
+pub use new::*;
+
 /// This is the main configuration struct.
 ///
 #[derive(Parser)]
@@ -21,16 +25,4 @@ pub struct Config {
 pub enum Commands {
     ///Create new workspace
     New(New),
-}
-
-/// Stores futher arguments for the sub-command 'new'
-#[derive(Args)]
-pub struct New {
-    /// Name of the project
-    #[clap(value_parser)]
-    pub project_name: String,
-
-    /// Name of directory the workspace should be created in
-    #[clap(value_parser)]
-    pub directory_name: Option<String>,
 }
