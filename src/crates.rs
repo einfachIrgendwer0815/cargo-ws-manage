@@ -44,23 +44,23 @@ impl Crate {
             )
         };
 
-        if is_root == false {
+        if !is_root {
             crate_name = input::get_string(crate_name_prompt, None, Some(false));
             directory_name =
                 input::get_string(directory_name_prompt, Some(crate_name.clone()), None);
 
             if root_exists {
                 as_dependency =
-                    input::prompt_yes_no(as_dependency_prompt, input::DefaultBool::YES).unwrap();
+                    input::prompt_yes_no(as_dependency_prompt, input::DefaultBool::Yes).unwrap();
             }
         }
 
         let binary = !input::prompt_yes_no(
             library_prompt,
             if is_root {
-                input::DefaultBool::NO
+                input::DefaultBool::No
             } else {
-                input::DefaultBool::YES
+                input::DefaultBool::Yes
             },
         )
         .unwrap();
@@ -77,13 +77,13 @@ impl Crate {
     pub fn write_to_disk(&self, root_dir: &str) {
         let dirname = format!("{}/{}", root_dir, self.directory_name);
 
-        if self.is_root == false {
+        if !self.is_root {
             fs::create_dir_or_handle_error(&dirname);
         }
 
         self.write_src(&dirname);
 
-        if self.is_root == true {
+        if self.is_root {
             return;
         }
 
@@ -105,15 +105,15 @@ impl Crate {
         let src_dir = format!("{}/src", crate_dirname);
         fs::create_dir_or_handle_error(&src_dir);
 
-        let filename = if self.binary == true {
+        let filename = if self.binary {
             format!("{}/src/main.rs", crate_dirname)
         } else {
             format!("{}/src/lib.rs", crate_dirname)
         };
 
-        let result = if self.binary == true {
+        let result = if self.binary {
             fs::write_file(
-                &Path::new(&filename),
+                Path::new(&filename),
                 &String::from(
                     "\
 fn main() {
@@ -125,7 +125,7 @@ fn main() {
             )
         } else {
             fs::write_file(
-                &Path::new(&filename),
+                Path::new(&filename),
                 &String::from(
                     "\
 pub fn run() {

@@ -13,13 +13,13 @@ pub struct Workspace {
 }
 
 impl Workspace {
-    pub fn new(project_name: &String, directory_name: &Option<String>) -> Workspace {
+    pub fn new(project_name: &str, directory_name: &Option<String>) -> Workspace {
         Workspace {
-            project_name: project_name.clone(),
+            project_name: project_name.to_owned(),
             directory_name: if let Some(name) = directory_name {
                 name.clone()
             } else {
-                project_name.clone()
+                project_name.to_owned()
             },
             root_crate: None,
             crates: Vec::new(),
@@ -28,10 +28,10 @@ impl Workspace {
 
     pub fn fill_from_user_input(&mut self) {
         self.root_crate = {
-            if input::prompt_yes_no("Add root crate?", input::DefaultBool::YES).unwrap() {
+            if input::prompt_yes_no("Add root crate?", input::DefaultBool::Yes).unwrap() {
                 println!("\nPlease specify some information about the root crate:");
                 let r_crate = Some(Crate::new_from_user_input(true, false, true));
-                println!("");
+                println!();
                 r_crate
             } else {
                 None
@@ -41,13 +41,13 @@ impl Workspace {
         let mut crates = Vec::new();
         while input::prompt_yes_no(
             "Do you want to add a/another member crate?",
-            input::DefaultBool::YES,
+            input::DefaultBool::Yes,
         )
         .unwrap()
         {
             println!("\nPlease specify some information about this crate:");
             crates.push(Crate::new_from_user_input(false, true, true));
-            println!("");
+            println!();
         }
 
         self.crates = crates;
@@ -63,7 +63,7 @@ impl Workspace {
             member_crate.write_to_disk(&self.directory_name);
 
             members.push(member_crate.crate_name.clone());
-            if member_crate.as_dependency == true {
+            if member_crate.as_dependency {
                 deps.push(member_crate.crate_name.clone());
             }
         }
@@ -93,7 +93,7 @@ impl Workspace {
                 } else {
                     None
                 },
-                workspace: Some(WorkspaceSection { members: members }),
+                workspace: Some(WorkspaceSection { members }),
             },
         );
     }

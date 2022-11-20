@@ -4,16 +4,16 @@ use std::io::{self, Write};
 
 /// Defaults for an yes-or-no prompt.
 pub enum DefaultBool {
-    YES,
-    NO,
+    Yes,
+    No,
     None,
 }
 
 /// Asks the user a yes or no question.
 pub fn prompt_yes_no(prompt: &str, default: DefaultBool) -> Option<bool> {
     let y_n = match default {
-        DefaultBool::YES => "(Y/n)",
-        DefaultBool::NO => "(y/N)",
+        DefaultBool::Yes => "(Y/n)",
+        DefaultBool::No => "(y/N)",
         DefaultBool::None => "(y/n)",
     };
 
@@ -27,14 +27,14 @@ pub fn prompt_yes_no(prompt: &str, default: DefaultBool) -> Option<bool> {
     let lower_input = buffer.trim().to_lowercase();
 
     match default {
-        DefaultBool::YES => {
+        DefaultBool::Yes => {
             if lower_input == "n" {
                 Some(false)
             } else {
                 Some(true)
             }
         }
-        DefaultBool::NO => {
+        DefaultBool::No => {
             if lower_input == "y" {
                 Some(true)
             } else {
@@ -69,7 +69,7 @@ pub fn get_string(prompt: &str, default: Option<String>, allow_empty: Option<boo
         output_prompt(&format!(
             "{} [{}] ",
             prompt,
-            if let Some(text) = &default { &text } else { "" }
+            if let Some(text) = &default { text } else { "" }
         ));
 
         buffer = String::new();
@@ -77,18 +77,14 @@ pub fn get_string(prompt: &str, default: Option<String>, allow_empty: Option<boo
 
         buffer = buffer.trim().to_string();
 
-        if buffer.len() == 0 {
-            if let None = default {
-                if allow_empty == false {
-                    continue 'input_loop;
-                }
-            }
+        if buffer.is_empty() && default.is_none() && !allow_empty {
+            continue 'input_loop;
         }
 
         break 'input_loop;
     }
 
-    if buffer.len() == 0 {
+    if buffer.is_empty() {
         if let Some(text) = default {
             return text;
         }

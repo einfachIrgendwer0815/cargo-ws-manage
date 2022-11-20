@@ -1,6 +1,6 @@
 //! This module contains all settings for the argument parsing done by clap.
 
-use clap::{AppSettings, Args, Parser, Subcommand};
+use clap::{AppSettings, Parser, Subcommand};
 
 pub mod new;
 

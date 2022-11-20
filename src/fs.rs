@@ -58,7 +58,7 @@ pub fn read_toml_file<T: for<'a> Deserialize<'a>>(path: &Path) -> Result<T, IOEr
     match toml::from_str::<T>(&data) {
         Ok(d) => Ok(d),
         Err(e) => {
-            return Err(IOError::TomlDeError(e));
+            Err(IOError::TomlDeError(e))
         }
     }
 }
@@ -79,7 +79,7 @@ pub fn read_file(path: &Path) -> Result<String, IOError> {
     match file.read_to_string(&mut buffer) {
         Ok(_) => Ok(buffer),
         Err(e) => {
-            return Err(IOError::FsError(e));
+            Err(IOError::FsError(e))
         }
     }
 }
@@ -149,7 +149,7 @@ fn unpack_path(path: &Path) -> Result<&str, IOError> {
     match path.to_str() {
         Some(s) => Ok(s),
         None => {
-            return Err(IOError::InvalidPath);
+            Err(IOError::InvalidPath)
         }
     }
 }
@@ -162,7 +162,7 @@ pub fn write_cargo_toml_or_handle_error(dirname: &str, content: &CargoToml) {
     let toml_object = gen_toml_object(content);
     let filename = format!("{}/Cargo.toml", dirname);
 
-    match write_toml_file(&Path::new(&filename), &toml_object, false) {
+    match write_toml_file(Path::new(&filename), &toml_object, false) {
         Ok(_) => {}
         Err(e) => {
             match e {
@@ -197,15 +197,15 @@ fn gen_toml_object(content: &CargoToml) -> Table {
         let mut pkg = Table::new();
         pkg.insert(
             String::from("name"),
-            Value::String(String::from(p.pkg_name.clone())),
+            Value::String(String::from(p.pkg_name)),
         );
         pkg.insert(
             String::from("version"),
-            Value::String(String::from(p.pkg_version.clone())),
+            Value::String(String::from(p.pkg_version)),
         );
         pkg.insert(
             String::from("edition"),
-            Value::String(String::from(p.pkg_edition.clone())),
+            Value::String(String::from(p.pkg_edition)),
         );
 
         data.insert(String::from("package"), Value::Table(pkg));
@@ -278,8 +278,8 @@ mod tests {
         let path = Path::new("/abc/def/123/X_y_z.txt");
         let path2 = Path::new("/elephant/🐘.txt");
 
-        assert_eq!("/abc/def/123/X_y_z.txt", unpack_path(&path).unwrap());
-        assert_eq!("/elephant/🐘.txt", unpack_path(&path2).unwrap());
+        assert_eq!("/abc/def/123/X_y_z.txt", unpack_path(path).unwrap());
+        assert_eq!("/elephant/🐘.txt", unpack_path(path2).unwrap());
     }
 }
 
@@ -299,11 +299,11 @@ pub mod context_setup {
             let dir_name = format!("test_files_{}", thread_rng().gen_range(0..10000));
             match fs::create_dir(dir_name.as_str()) {
                 Ok(_) => TestFiles {
-                    name: dir_name.clone(),
+                    name: dir_name,
                 },
                 Err(e) => match e.kind() {
                     ErrorKind::AlreadyExists => TestFiles {
-                        name: dir_name.clone(),
+                        name: dir_name,
                     },
                     _ => panic!("{}", e),
                 },
@@ -311,7 +311,7 @@ pub mod context_setup {
         }
 
         fn teardown(self) {
-            if let Err(_) = fs::remove_dir_all(self.name) {};
+            if fs::remove_dir_all(self.name).is_err() {};
         }
     }
 }
@@ -328,7 +328,7 @@ mod test_dir {
         let raw_path = format!("{}/test_mkdir_not_recursive", &ctx.name);
         let path = Path::new(raw_path.as_str());
 
-        let result = mkdir(&path, false);
+        let result = mkdir(path, false);
         assert!(result.is_ok());
     }
 
@@ -338,7 +338,7 @@ mod test_dir {
         let raw_path = format!("{}/test_mkdir_recursive/inner_dir", &ctx.name);
         let path = Path::new(raw_path.as_str());
 
-        let result = mkdir(&path, true);
+        let result = mkdir(path, true);
         assert!(result.is_ok());
     }
 }
