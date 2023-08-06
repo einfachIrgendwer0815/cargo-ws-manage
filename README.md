@@ -25,7 +25,9 @@
 
 Cargo-ws-manage is a command line tool written in rust and is made for an easier and faster way of handling cargo workspaces. Becaues of the 'cargo-' prefix, it can be used as a sub-command of cargo with `cargo ws-manage`.
 
+## Archived
 
+This project is discontinued.
 
 ## Getting started
 
